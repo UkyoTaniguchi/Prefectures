@@ -24,17 +24,17 @@ export default function Checkbox() {
 
   return (
     <div>
-      <h1>都道府県</h1>
-      <ul>
+      <h1 className="text-xl font-bold mb-3">都道府県</h1>
+      <div className="flex flex-wrap gap-5">
         {prefectures.map((pref) => (
-          <li key={pref.prefCode}>
+          <div key={pref.prefCode}>
             <label>
               <input type="checkbox" value={pref.prefName} />
               {pref.prefName}
             </label>
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

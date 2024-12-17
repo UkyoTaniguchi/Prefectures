@@ -5,7 +5,7 @@ import Graph from "./components/Graph";
 
 export default function Home() {
   return (
-    <div>
+    <div className="px-2">
       <Title />
       <Checkbox />
       <Graph />
