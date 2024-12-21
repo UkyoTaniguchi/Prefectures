@@ -81,32 +81,6 @@ export default function Checkbox({
           </div>
         ))}
       </div>
-      <div>
-        <h2 className="text-xl font-bold mb-3">選択された都道府県のデータ</h2>
-        {Object.entries(selectedPrefectures).map(
-          ([prefCode, population]) =>
-            population && (
-              <div key={prefCode} className="mb-5">
-                <h3 className="text-lg font-semibold">
-                  都道府県コード: {prefCode} (境界年: {population.boundaryYear})
-                </h3>
-                {population.data.map((category, index) => (
-                  <div key={index}>
-                    <h4>{category.label}</h4>
-                    <ul>
-                      {category.data.map((item, i) => (
-                        <li key={i}>
-                          年: {item.year}, 人口: {item.value}, 増加率:{" "}
-                          {item.rate}%
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            )
-        )}
-      </div>
     </div>
   );
 }
