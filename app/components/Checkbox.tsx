@@ -5,26 +5,34 @@ type Prefecture = {
   prefCode: number;
   prefName: string;
 };
-type PopulationData = {
-  year: number;
-  value: number;
-  rate: number;
-};
-type PopulationCategory = {
-  label: string;
-  data: PopulationData[];
-};
 
 type PopulationResponse = {
   boundaryYear: number;
-  data: PopulationCategory[];
+  data: {
+    label: string;
+    data: {
+      year: number;
+      value: number;
+      rate: number;
+    }[];
+  }[];
 };
 
-export default function Checkbox() {
-  const [prefectures, setPrefectures] = useState<Prefecture[]>([]);
-  const [selectedPrefectures, setSelectedPrefectures] = useState<{
-    [key: number]: PopulationResponse | null;
-  }>({});
+type CheckboxProps = {
+  selectedPrefectures: { [key: number]: PopulationResponse | null };
+  setSelectedPrefectures: React.Dispatch<
+    React.SetStateAction<{ [key: number]: PopulationResponse | null }>
+  >;
+  prefectures: Prefecture[];
+  setPrefectures: React.Dispatch<React.SetStateAction<Prefecture[]>>;
+};
+
+export default function Checkbox({
+  selectedPrefectures,
+  setSelectedPrefectures,
+  prefectures,
+  setPrefectures,
+}: CheckboxProps) {
   useEffect(() => {
     const fetchPrefectures = async () => {
       try {
@@ -72,31 +80,6 @@ export default function Checkbox() {
             </label>
           </div>
         ))}
-      </div>
-      <div className="mt-5">
-        {Object.entries(selectedPrefectures).map(
-          ([prefCode, population], index) =>
-            population && (
-              <div key={prefCode} className="mb-5">
-                <h2 className="text-lg font-bold">
-                  都道府県コード: {prefCode} (境界年: {population.boundaryYear})
-                </h2>
-                {population.data.map((category, catIndex) => (
-                  <div key={catIndex}>
-                    <h3 className="font-semibold">{category.label}</h3>
-                    <ul>
-                      {category.data.map((item, itemIndex) => (
-                        <li key={itemIndex}>
-                          年: {item.year}, 人口: {item.value}, 増加率:{" "}
-                          {item.rate}%
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            )
-        )}
       </div>
     </div>
   );

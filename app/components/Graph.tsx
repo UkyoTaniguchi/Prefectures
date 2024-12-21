@@ -1,5 +1,152 @@
-import React from "react";
+"use client";
 
-export default function Graph() {
-  return <div>グラフ</div>;
+import React, { useRef, useState, useEffect } from "react";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
+
+type Prefecture = {
+  prefCode: number;
+  prefName: string;
+};
+
+type PopulationResponse = {
+  boundaryYear: number;
+  data: {
+    label: string;
+    data: {
+      year: number;
+      value: number;
+      rate: number;
+    }[];
+  }[];
+};
+
+type GraphProps = {
+  selectedPrefectures: { [key: number]: PopulationResponse | null };
+  prefectures: Prefecture[];
+};
+
+export default function Graph({
+  selectedPrefectures,
+  prefectures,
+}: GraphProps) {
+  const [population, setPopulation] = useState<
+    { year: number; value: number; rate: number }[]
+  >([]);
+  const [selectedLabel, setSelectedLabel] = useState<string>("総人口");
+
+  const labelcheck = (value: string) => {
+    setSelectedLabel(value);
+  };
+
+  useEffect(() => {
+    const totalPopulationData = Object.values(selectedPrefectures)
+      .filter((data) => data !== null)
+      .flatMap((population) =>
+        population!.data
+          .filter((category) => category.label === selectedLabel)
+          .flatMap((category) => category.data)
+      );
+    setPopulation(totalPopulationData);
+  }, [selectedPrefectures, selectedLabel]);
+
+  const options: Highcharts.Options = {
+    title: {
+      text: `${selectedLabel}`,
+    },
+    xAxis: {
+      title: {
+        text: "年",
+      },
+      categories: Array.from(
+        new Set(
+          Object.values(selectedPrefectures)
+            .filter((data) => data !== null)
+            .flatMap((population) =>
+              population!.data
+                .filter((category) => category.label === selectedLabel)
+                .flatMap((category) => category.data.map((item) => item.year))
+            )
+        )
+      ).map((year) => year.toString()),
+    },
+    yAxis: {
+      title: {
+        text: "人口数",
+      },
+    },
+    series: Object.entries(selectedPrefectures)
+      .filter(([_, data]) => data !== null)
+      .flatMap(([prefCode, population]) => {
+        const data = population!.data
+          .filter((category) => category.label === selectedLabel)
+          .flatMap((category) => category.data.map((item) => item.value));
+        const prefName =
+          prefectures.find((pref) => pref.prefCode === Number(prefCode))
+            ?.prefName || `都道府県 ${prefCode}`;
+        return {
+          type: "line",
+          name: prefName,
+          data,
+        };
+      }),
+  };
+
+  const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
+  return (
+    <div>
+      <div>
+        <div>
+          <input
+            type="radio"
+            name="population"
+            value="総人口"
+            onChange={(e) => labelcheck(e.target.value)}
+            checked={selectedLabel === "総人口"}
+          />
+          総人口
+        </div>
+        <div>
+          <input
+            type="radio"
+            name="population"
+            value="年少人口"
+            onChange={(e) => labelcheck(e.target.value)}
+            checked={selectedLabel === "年少人口"}
+          />
+          年少人口
+        </div>
+        <div>
+          <input
+            type="radio"
+            name="population"
+            value="生産年齢人口"
+            onChange={(e) => labelcheck(e.target.value)}
+            checked={selectedLabel === "生産年齢人口"}
+          />
+          生産年齢人口
+        </div>
+        <div>
+          <input
+            type="radio"
+            name="population"
+            value="老年人口"
+            onChange={(e) => labelcheck(e.target.value)}
+            checked={selectedLabel === "老年人口"}
+          />
+          老年人口
+        </div>
+      </div>
+      <div>グラフ</div>
+      {population.length > 0 ? (
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={options}
+          ref={chartComponentRef}
+        />
+      ) : (
+        <p>データがありません</p>
+      )}
+    </div>
+  );
 }
