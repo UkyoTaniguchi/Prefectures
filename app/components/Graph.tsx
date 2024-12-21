@@ -52,29 +52,44 @@ export default function Graph({
 
   const options: Highcharts.Options = {
     title: {
-      text: "総人口",
+      text: `${selectedLabel}`,
     },
     xAxis: {
       title: {
         text: "年",
       },
-      categories: population.map((item) => item.year.toString()),
+      categories: Array.from(
+        new Set(
+          Object.values(selectedPrefectures)
+            .filter((data) => data !== null)
+            .flatMap((population) =>
+              population!.data
+                .filter((category) => category.label === selectedLabel)
+                .flatMap((category) => category.data.map((item) => item.year))
+            )
+        )
+      ).map((year) => year.toString()),
     },
     yAxis: {
       title: {
         text: "人口数",
       },
     },
-    series:
-      population.length > 0
-        ? [
-            {
-              type: "line",
-              name: "総人口",
-              data: population.map((item) => item.value),
-            },
-          ]
-        : [],
+    series: Object.entries(selectedPrefectures)
+      .filter(([_, data]) => data !== null)
+      .flatMap(([prefCode, population]) => {
+        const data = population!.data
+          .filter((category) => category.label === selectedLabel)
+          .flatMap((category) => category.data.map((item) => item.value));
+        const prefName =
+          prefectures.find((pref) => pref.prefCode === Number(prefCode))
+            ?.prefName || `都道府県 ${prefCode}`;
+        return {
+          type: "line",
+          name: prefName,
+          data,
+        };
+      }),
   };
 
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
