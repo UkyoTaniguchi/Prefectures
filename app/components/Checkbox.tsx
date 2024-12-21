@@ -5,26 +5,34 @@ type Prefecture = {
   prefCode: number;
   prefName: string;
 };
-type PopulationData = {
-  year: number;
-  value: number;
-  rate: number;
-};
-type PopulationCategory = {
-  label: string;
-  data: PopulationData[];
-};
 
 type PopulationResponse = {
   boundaryYear: number;
-  data: PopulationCategory[];
+  data: {
+    label: string;
+    data: {
+      year: number;
+      value: number;
+      rate: number;
+    }[];
+  }[];
 };
 
-export default function Checkbox() {
-  const [prefectures, setPrefectures] = useState<Prefecture[]>([]);
-  const [selectedPrefectures, setSelectedPrefectures] = useState<{
-    [key: number]: PopulationResponse | null;
-  }>({});
+type CheckboxProps = {
+  selectedPrefectures: { [key: number]: PopulationResponse | null };
+  setSelectedPrefectures: React.Dispatch<
+    React.SetStateAction<{ [key: number]: PopulationResponse | null }>
+  >;
+  prefectures: Prefecture[];
+  setPrefectures: React.Dispatch<React.SetStateAction<Prefecture[]>>;
+};
+
+export default function Checkbox({
+  selectedPrefectures,
+  setSelectedPrefectures,
+  prefectures,
+  setPrefectures,
+}: CheckboxProps) {
   useEffect(() => {
     const fetchPrefectures = async () => {
       try {
@@ -73,20 +81,21 @@ export default function Checkbox() {
           </div>
         ))}
       </div>
-      <div className="mt-5">
+      <div>
+        <h2 className="text-xl font-bold mb-3">選択された都道府県のデータ</h2>
         {Object.entries(selectedPrefectures).map(
-          ([prefCode, population], index) =>
+          ([prefCode, population]) =>
             population && (
               <div key={prefCode} className="mb-5">
-                <h2 className="text-lg font-bold">
+                <h3 className="text-lg font-semibold">
                   都道府県コード: {prefCode} (境界年: {population.boundaryYear})
-                </h2>
-                {population.data.map((category, catIndex) => (
-                  <div key={catIndex}>
-                    <h3 className="font-semibold">{category.label}</h3>
+                </h3>
+                {population.data.map((category, index) => (
+                  <div key={index}>
+                    <h4>{category.label}</h4>
                     <ul>
-                      {category.data.map((item, itemIndex) => (
-                        <li key={itemIndex}>
+                      {category.data.map((item, i) => (
+                        <li key={i}>
                           年: {item.year}, 人口: {item.value}, 増加率:{" "}
                           {item.rate}%
                         </li>
