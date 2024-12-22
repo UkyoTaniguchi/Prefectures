@@ -51,12 +51,21 @@ export default function Graph({
   }, [selectedPrefectures, selectedLabel]);
 
   const options: Highcharts.Options = {
+    chart: {
+      backgroundColor: "#2b2b2b",
+    },
     title: {
       text: `${selectedLabel}`,
+      style: {
+        color: "#ffffff",
+      },
     },
     xAxis: {
       title: {
         text: "年",
+        style: {
+          color: "#ffffff",
+        },
       },
       categories: Array.from(
         new Set(
@@ -69,15 +78,31 @@ export default function Graph({
             )
         )
       ).map((year) => year.toString()),
+      labels: {
+        style: {
+          color: "#ffffff",
+        },
+      },
     },
     yAxis: {
       title: {
         text: "人口数",
+        style: {
+          color: "#ffffff",
+        },
       },
       labels: {
         formatter: function () {
           return this.value.toLocaleString();
         },
+        style: {
+          color: "#ffffff",
+        },
+      },
+    },
+    legend: {
+      itemStyle: {
+        color: "#ffffff",
       },
     },
     series: Object.entries(selectedPrefectures)
@@ -142,7 +167,6 @@ export default function Graph({
           老年人口
         </div>
       </div>
-      <div>グラフ</div>
       {population.length > 0 ? (
         <HighchartsReact
           highcharts={Highcharts}
