@@ -74,6 +74,11 @@ export default function Graph({
       title: {
         text: "人口数",
       },
+      labels: {
+        formatter: function () {
+          return this.value.toLocaleString();
+        },
+      },
     },
     series: Object.entries(selectedPrefectures)
       .filter(([_, data]) => data !== null)
