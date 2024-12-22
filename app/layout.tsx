@@ -1,20 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Noto_Serif_JP } from "next/font/google";
+import { Noto_Serif_JP } from "next/font/google";
 import "./globals.css";
 
 const NoteSerifJP = Noto_Serif_JP({
   subsets: ["latin"], // 必要なサブセットを指定します
   weight: ["400", "700"], // 使用するフォントウェイトを指定
-});
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {

@@ -129,7 +129,7 @@ export default function Graph({
       },
     },
     series: Object.entries(selectedPrefectures)
-      .filter(([_, data]) => data !== null)
+      .filter(([data]) => data !== null)
       .flatMap(([prefCode, population]) => {
         const data = population!.data
           .filter((category) => category.label === selectedLabel)
