@@ -70,7 +70,7 @@ export default function Checkbox({
         <h1 className="text-xl font-bold">都道府県</h1>
         <div className="flex-grow h-0.5 bg-gray-500"></div>
       </div>
-      <div className="flex flex-wrap gap-4 text-lg">
+      <div className="flex flex-wrap gap-2 sm:gap-4 text-base sm:text-lg">
         {prefectures.map((pref) => (
           <div key={pref.prefCode}>
             <input

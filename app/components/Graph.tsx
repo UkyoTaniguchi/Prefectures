@@ -129,7 +129,7 @@ export default function Graph({
         <h1 className="text-xl font-bold">グラフ</h1>
         <div className="flex-grow h-0.5 bg-gray-500"></div>
       </div>
-      <div className="flex justify-end gap-5 mb-1 text-lg">
+      <div className="flex justify-end gap-2 sm:gap-5 mb-1 text-base sm:text-lg">
         <label className="cursor-pointer">
           <input
             type="radio"
