@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   const API_URL =
     "https://yumemi-frontend-engineer-codecheck-api.vercel.app/api/v1/prefectures";
   const API_KEY = process.env.YUMEMI_API_KEY;
@@ -21,13 +21,14 @@ export async function GET(req: NextRequest) {
     const data = await response.json();
 
     return NextResponse.json(data);
-  } catch (error: any) {
-    console.error("エラー:", error);
+  } catch (error) {
+    const err = error as Error;
+    console.error("エラー：", err);
 
     return NextResponse.json(
       {
         message: "都道府県データの取得に失敗しました。",
-        error: error.message,
+        error: err.message,
       },
       { status: 500 }
     );

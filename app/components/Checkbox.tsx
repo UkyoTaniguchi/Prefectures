@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 type Prefecture = {
   prefCode: number;
@@ -19,7 +19,6 @@ type PopulationResponse = {
 };
 
 type CheckboxProps = {
-  selectedPrefectures: { [key: number]: PopulationResponse | null };
   setSelectedPrefectures: React.Dispatch<
     React.SetStateAction<{ [key: number]: PopulationResponse | null }>
   >;
@@ -28,7 +27,6 @@ type CheckboxProps = {
 };
 
 export default function Checkbox({
-  selectedPrefectures,
   setSelectedPrefectures,
   prefectures,
   setPrefectures,
@@ -45,7 +43,7 @@ export default function Checkbox({
     };
 
     fetchPrefectures();
-  }, []);
+  }, [setPrefectures]);
 
   const handleCheck = async (prefCode: number, isChecked: boolean) => {
     if (isChecked) {
