@@ -51,6 +51,9 @@ export default function Graph({
   }, [selectedPrefectures, selectedLabel]);
 
   const options: Highcharts.Options = {
+    accessibility: {
+      enabled: false,
+    },
     chart: {
       backgroundColor: "#2b2b2b",
     },
