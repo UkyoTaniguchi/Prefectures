@@ -93,7 +93,7 @@ export default function Graph({
       },
       labels: {
         formatter: function () {
-          return this.value.toLocaleString();
+          return (this.value as number) / 10000 + "万人";
         },
         style: {
           color: "#ffffff",
@@ -124,9 +124,13 @@ export default function Graph({
 
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   return (
-    <div>
-      <div>
-        <div>
+    <div className="mx-0">
+      <div className="flex items-center gap-4">
+        <h1 className="text-xl font-bold">グラフ</h1>
+        <div className="flex-grow h-0.5 bg-gray-500"></div>
+      </div>
+      <div className="flex justify-end gap-5 mb-1 text-lg">
+        <label className="cursor-pointer">
           <input
             type="radio"
             name="population"
@@ -135,8 +139,8 @@ export default function Graph({
             checked={selectedLabel === "総人口"}
           />
           総人口
-        </div>
-        <div>
+        </label>
+        <label className="cursor-pointer">
           <input
             type="radio"
             name="population"
@@ -145,8 +149,8 @@ export default function Graph({
             checked={selectedLabel === "年少人口"}
           />
           年少人口
-        </div>
-        <div>
+        </label>
+        <label className="cursor-pointer">
           <input
             type="radio"
             name="population"
@@ -155,8 +159,8 @@ export default function Graph({
             checked={selectedLabel === "生産年齢人口"}
           />
           生産年齢人口
-        </div>
-        <div>
+        </label>
+        <label className="cursor-pointer">
           <input
             type="radio"
             name="population"
@@ -165,7 +169,7 @@ export default function Graph({
             checked={selectedLabel === "老年人口"}
           />
           老年人口
-        </div>
+        </label>
       </div>
       {population.length > 0 ? (
         <HighchartsReact
@@ -174,7 +178,9 @@ export default function Graph({
           ref={chartComponentRef}
         />
       ) : (
-        <p>データがありません</p>
+        <p className="text-center font-bold text-red-500">
+          都道府県を選択してください
+        </p>
       )}
     </div>
   );
