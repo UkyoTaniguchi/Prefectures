@@ -33,7 +33,6 @@ export default function Home() {
       <Suspense>
         <Title />
         <Checkbox
-          selectedPrefectures={selectedPrefectures}
           setSelectedPrefectures={setSelectedPrefectures}
           prefectures={prefectures}
           setPrefectures={setPrefectures}
