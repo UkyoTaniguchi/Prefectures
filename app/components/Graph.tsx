@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import Label from "./Label";
 
 type Prefecture = {
   prefCode: number;
@@ -34,6 +35,25 @@ export default function Graph({
     { year: number; value: number; rate: number }[]
   >([]);
   const [selectedLabel, setSelectedLabel] = useState<string>("総人口");
+
+  const labelOptions = [
+    {
+      value: "総人口",
+      label: "総人口",
+    },
+    {
+      value: "年少人口",
+      label: "年少人口",
+    },
+    {
+      value: "生産年齢人口",
+      label: "生産年齢人口",
+    },
+    {
+      value: "老年人口",
+      label: "老年人口",
+    },
+  ];
 
   const labelcheck = (value: string) => {
     setSelectedLabel(value);
@@ -133,46 +153,15 @@ export default function Graph({
         <div className="flex-grow h-0.5 bg-gray-500"></div>
       </div>
       <div className="flex justify-end gap-2 sm:gap-5 mb-1 text-base sm:text-lg">
-        <label className="cursor-pointer">
-          <input
-            type="radio"
-            name="population"
-            value="総人口"
-            onChange={(e) => labelcheck(e.target.value)}
-            checked={selectedLabel === "総人口"}
+        {labelOptions.map((options) => (
+          <Label
+            key={options.value}
+            value={options.value}
+            label={options.label}
+            selected={selectedLabel === options.value}
+            onChange={labelcheck}
           />
-          総人口
-        </label>
-        <label className="cursor-pointer">
-          <input
-            type="radio"
-            name="population"
-            value="年少人口"
-            onChange={(e) => labelcheck(e.target.value)}
-            checked={selectedLabel === "年少人口"}
-          />
-          年少人口
-        </label>
-        <label className="cursor-pointer">
-          <input
-            type="radio"
-            name="population"
-            value="生産年齢人口"
-            onChange={(e) => labelcheck(e.target.value)}
-            checked={selectedLabel === "生産年齢人口"}
-          />
-          生産年齢人口
-        </label>
-        <label className="cursor-pointer">
-          <input
-            type="radio"
-            name="population"
-            value="老年人口"
-            onChange={(e) => labelcheck(e.target.value)}
-            checked={selectedLabel === "老年人口"}
-          />
-          老年人口
-        </label>
+        ))}
       </div>
       {population.length > 0 ? (
         <HighchartsReact
