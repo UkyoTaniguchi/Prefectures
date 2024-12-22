@@ -2,6 +2,8 @@ import React from "react";
 
 export default function Title() {
   return (
-    <div className="w-full text-5xl font-bold text-center py-3">Title</div>
+    <div className="w-full text-5xl font-bold text-center py-3 mb-5">
+      都道府県別人口推移
+    </div>
   );
 }
