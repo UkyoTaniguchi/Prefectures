@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import Label from "./Label";
 
 type Prefecture = {
   prefCode: number;
@@ -35,6 +36,25 @@ export default function Graph({
   >([]);
   const [selectedLabel, setSelectedLabel] = useState<string>("総人口");
 
+  const labelOptions = [
+    {
+      value: "総人口",
+      label: "総人口",
+    },
+    {
+      value: "年少人口",
+      label: "年少人口",
+    },
+    {
+      value: "生産年齢人口",
+      label: "生産年齢人口",
+    },
+    {
+      value: "老年人口",
+      label: "老年人口",
+    },
+  ];
+
   const labelcheck = (value: string) => {
     setSelectedLabel(value);
   };
@@ -51,12 +71,24 @@ export default function Graph({
   }, [selectedPrefectures, selectedLabel]);
 
   const options: Highcharts.Options = {
+    accessibility: {
+      enabled: false,
+    },
+    chart: {
+      backgroundColor: "#2b2b2b",
+    },
     title: {
       text: `${selectedLabel}`,
+      style: {
+        color: "#ffffff",
+      },
     },
     xAxis: {
       title: {
         text: "年",
+        style: {
+          color: "#ffffff",
+        },
       },
       categories: Array.from(
         new Set(
@@ -69,10 +101,31 @@ export default function Graph({
             )
         )
       ).map((year) => year.toString()),
+      labels: {
+        style: {
+          color: "#ffffff",
+        },
+      },
     },
     yAxis: {
       title: {
         text: "人口数",
+        style: {
+          color: "#ffffff",
+        },
+      },
+      labels: {
+        formatter: function () {
+          return (this.value as number) / 10000 + "万人";
+        },
+        style: {
+          color: "#ffffff",
+        },
+      },
+    },
+    legend: {
+      itemStyle: {
+        color: "#ffffff",
       },
     },
     series: Object.entries(selectedPrefectures)
@@ -94,50 +147,22 @@ export default function Graph({
 
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   return (
-    <div>
-      <div>
-        <div>
-          <input
-            type="radio"
-            name="population"
-            value="総人口"
-            onChange={(e) => labelcheck(e.target.value)}
-            checked={selectedLabel === "総人口"}
-          />
-          総人口
-        </div>
-        <div>
-          <input
-            type="radio"
-            name="population"
-            value="年少人口"
-            onChange={(e) => labelcheck(e.target.value)}
-            checked={selectedLabel === "年少人口"}
-          />
-          年少人口
-        </div>
-        <div>
-          <input
-            type="radio"
-            name="population"
-            value="生産年齢人口"
-            onChange={(e) => labelcheck(e.target.value)}
-            checked={selectedLabel === "生産年齢人口"}
-          />
-          生産年齢人口
-        </div>
-        <div>
-          <input
-            type="radio"
-            name="population"
-            value="老年人口"
-            onChange={(e) => labelcheck(e.target.value)}
-            checked={selectedLabel === "老年人口"}
-          />
-          老年人口
-        </div>
+    <div className="mx-0">
+      <div className="flex items-center gap-4">
+        <h1 className="text-xl font-bold">グラフ</h1>
+        <div className="flex-grow h-0.5 bg-gray-500"></div>
       </div>
-      <div>グラフ</div>
+      <div className="flex justify-end gap-2 sm:gap-5 mb-1 text-base sm:text-lg">
+        {labelOptions.map((options) => (
+          <Label
+            key={options.value}
+            value={options.value}
+            label={options.label}
+            selected={selectedLabel === options.value}
+            onChange={labelcheck}
+          />
+        ))}
+      </div>
       {population.length > 0 ? (
         <HighchartsReact
           highcharts={Highcharts}
@@ -145,7 +170,9 @@ export default function Graph({
           ref={chartComponentRef}
         />
       ) : (
-        <p>データがありません</p>
+        <p className="text-center font-bold text-red-500">
+          都道府県を選択してください
+        </p>
       )}
     </div>
   );
