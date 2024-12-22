@@ -31,13 +31,14 @@ export async function GET(req: NextRequest) {
     }
     const data = await response.json();
     return NextResponse.json(data);
-  } catch (error: any) {
-    console.error("エラー：", error);
+  } catch (error) {
+    const err = error as Error;
+    console.error("エラー：", err);
 
     return NextResponse.json(
       {
         message: "人口データの取得に失敗しました",
-        error: error.message,
+        error: err.message,
       },
       { status: 500 }
     );
