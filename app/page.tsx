@@ -4,6 +4,7 @@ import Title from "./components/Title";
 import Checkbox from "./components/Checkbox";
 import Graph from "./components/Graph";
 import { useState } from "react";
+import { Suspense } from "react";
 
 type Prefecture = {
   prefCode: number;
@@ -29,17 +30,19 @@ export default function Home() {
   }>({});
   return (
     <div className="px-2">
-      <Title />
-      <Checkbox
-        selectedPrefectures={selectedPrefectures}
-        setSelectedPrefectures={setSelectedPrefectures}
-        prefectures={prefectures}
-        setPrefectures={setPrefectures}
-      />
-      <Graph
-        selectedPrefectures={selectedPrefectures}
-        prefectures={prefectures}
-      />
+      <Suspense>
+        <Title />
+        <Checkbox
+          selectedPrefectures={selectedPrefectures}
+          setSelectedPrefectures={setSelectedPrefectures}
+          prefectures={prefectures}
+          setPrefectures={setPrefectures}
+        />
+        <Graph
+          selectedPrefectures={selectedPrefectures}
+          prefectures={prefectures}
+        />
+      </Suspense>
     </div>
   );
 }
